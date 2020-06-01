@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<document>
+    <mainTemplate>
+        <background>
+            <img src="{{backgroundImg}}" />
+        </background>
+		
+		
+		
+		<menuBar>
+			<section>
+				<menuItem id="livestream" presentation="playVideo" data='{"title": "Eastview Live Stream", "videoURL": "{{stream}}", "description": "Welcome to our live church stream.", "subtitle": ""}'>
+					<title style="tv-highlight-color:rgba(255,255,255,1);color:rgba(0,0,0,0.9)">Live Service</title>
+				</menuItem>
+				<menuItem id="catalog" template="videos.tvml" presentation="push">
+					<title style="tv-highlight-color:rgba(255,255,255,1);color:rgba(0,0,0,0.9)">Archive Videos</title>
+				</menuItem>
+				<menuItem id="other" template="videos.tvml" presentation="resources">
+					<title style="tv-highlight-color:rgba(255,255,255,1);color:rgba(0,0,0,0.9)">Other Resources</title>
+				</menuItem>
+			</section>
+		</menuBar>
+    </mainTemplate>
+</document>
+
