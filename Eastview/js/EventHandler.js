@@ -11,14 +11,18 @@ class EventHandler {
     
     launchAnalytics(){
         if (typeof youbora !== 'undefined') {
-           youbora.pluginInstance = new youbora.Plugin({ accountCode: 'ssouser_30001279' });
+            
+           youbora.pluginInstance = new youbora.Plugin({
+                accountCode: 'haivision',
+                'extraparam.1': '2703737825'
+           });
             
            // Attach adapter
-           youbora.pluginInstance.setAdapter(new youbora.adapters.AppleTV3());
+            youbora.pluginInstance.setAdapter(new youbora.adapters.AppleTV3());
            
            // Initialize the plugin (/data request)
-           youbora.pluginInstance.getAdapter().begin();
-           youbora.Log.logLevel = youbora.Log.Level.Verbose
+            youbora.pluginInstance.getAdapter().begin();
+            youbora.Log.logLevel = youbora.Log.Level.Verbose;
         }
     }
     

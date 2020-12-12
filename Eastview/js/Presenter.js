@@ -1,5 +1,4 @@
 class Presenter {
-    
     constructor(resourceLoader, dataLoader) {
         this.resourceLoader = resourceLoader;
         this._dataController = dataLoader;
@@ -9,6 +8,7 @@ class Presenter {
         this.resourceData = 'https://feed.theplatform.com/f/IfSiAC/rc__xJJDuWf_?form=json';
         this.live = 'https://eastviewcc-lh.akamaihd.net/i/eastviewcc_1@597558/master.m3u8';
     }
+    
     
     
     /*
@@ -127,27 +127,23 @@ class Presenter {
      */
     playVideo(data, livestream, eventHandler) {
         
-        if (typeof youbora !== 'undefined') {
-           let options = {
-               'accountCode': 'ssouser_30001279',
-               'content.resource': data.videoURL,
-               'content.title': data.title,
-               'content.isLive': livestream,
-               'background.enabled': false
-           };
-           
-           // Instantiate the plugin
-           youbora.pluginInstance = new youbora.Plugin(options, new youbora.adapters.AppleTV3());
-           youbora.pluginInstance.getAdapter().begin();
-       }
-        
-        
-
         // Parse the JSON string
         data = JSON.parse(data);
         
+        
+       let options = {
+           'accountCode': 'haivision',
+           'content.resource': data.videoURL,
+           'content.title': data.title,
+           'content.isLive': false,
+           'background.enabled': false,
+           'extraparam.1': '2703737825',
+       };
+        
+        
         if (data.title == "Eastview Live Stream") {
             livestream = true;
+            options['content.isLive'] = true;
         }
         
         // In the case of live stream, check to see if stream is available
@@ -192,12 +188,18 @@ class Presenter {
         if (!livestream) {
             player.addEventListener("timeDidChange", this.handlePlaybackUpdates, {interval: 5});
         }
-
-        if (typeof youbora !== 'undefined') {
-            youbora.pluginInstance.getAdapter().onStartBuffering();
-            youbora.pluginInstance.getAdapter().fireStart();
-        }
-    
+                
+        // Instantiate the plugin
+        youbora.pluginInstance = new youbora.Plugin(options, new youbora.adapters.AppleTV3());
+        youbora.pluginInstance.getAdapter().begin();
+        
+        youbora.pluginInstance.getAdapter().onStartBuffering(0);
+        youbora.pluginInstance.getAdapter().fireStart();
+        
+        let timeStamp = new Date();
+        youbora.pluginInstance.getAdapter().playerStateChanged("stateDidChange", timeStamp);
+        youbora.pluginInstance.getAdapter().playerTimeDidChange(timeStamp);
+        
         // Play the video
         player.play();
     }
@@ -230,9 +232,20 @@ class Presenter {
         player.playlist = new Playlist();
         player.playlist.push(video);
         
-        if (typeof youbora !== 'undefined') {
-            youbora.pluginInstance.getAdapter().fireStart()
-        }
+        
+        let options = {
+            'accountCode': 'haivision',
+            'content.resource': data.videoURL,
+            'content.title': 'Eastview Live Stream',
+            'content.isLive': true,
+            'background.enabled': false,
+            'extraparam.1': '2703737825',
+        };
+        
+        youbora.pluginInstance = new youbora.Plugin(options, new youbora.adapters.AppleTV3());
+        youbora.pluginInstance.getAdapter().begin();
+        
+        youbora.pluginInstance.getAdapter().fireStart()
         
         // Play the video
         player.play();
@@ -268,9 +281,7 @@ class Presenter {
         var progress = event.time;
         localStorage.setItem(url, progress);
         
-        if (typeof youbora !== 'undefined') {
-           youbora.pluginInstance.getAdapter().playerTimeDidChange(event.time)
-        }
+        youbora.pluginInstance.getAdapter().playerTimeDidChange(event.time)
     }
     
     
